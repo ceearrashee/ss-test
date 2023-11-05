@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "app.fullname" . }}-configmap
+  labels:
+    app: {{ include "app.fullname" . }}-configmap
+    helm.sh/chart: "{{ $.Chart.Name }}-{{ $.Chart.Version | replace "+" "_" }}"
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  SSTT_WEBSERVICE_JWT_SECRET: {{ .Values.backend.apiServer.config.webService.jwt.secret | default (randAlphaNum 32) | quote }}
+  SSTT_WEBSERVICE_JWT_TOKENEXPIRATIONTIMEINMINUTES: {{ .Values.backend.apiServer.config.webService.jwt.tokenExpirationTimeInMinutes | default 60 | quote }}
+  SSTT_WEBSERVICE_PORT: {{ .Values.backend.apiServer.config.webService.port | default 80 | quote }}

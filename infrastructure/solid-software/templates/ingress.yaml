@@ -1,0 +1,30 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    kubernetes.io/ingress.global-static-ip-name: app
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: '43200'
+    nginx.ingress.kubernetes.io/proxy-next-upstream-timeout: '43200'
+    nginx.ingress.kubernetes.io/proxy-read-timeout: '43200'
+    nginx.ingress.kubernetes.io/proxy-send-timeout: '43200'
+    nginx.ingress.kubernetes.io/proxy-body-size: 10m
+  name: {{ include "app.fullname" . }}
+  labels:
+    app: {{ include "app.fullname" . }}-api-server
+    release: {{ .Release.Name }}
+    helm.sh/chart: "{{ $.Chart.Name }}-{{ $.Chart.Version | replace "+" "_" }}"
+    app.kubernetes.io/version: "{{ $.Chart.Name }}-{{ $.Chart.AppVersion | replace "+" "_" }}"
+    heritage: {{ .Release.Service }}
+spec:
+  rules:
+    - host: blow.pp.ua
+      http:
+        paths:
+          - path: /api/v1
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "app.fullname" . }}-api-server
+                port:
+                  number: 80
