@@ -1,0 +1,6 @@
+webService:
+  host:
+  port: 80
+  jwt:
+    secret: signature_hmac_secret_shared_key
+    tokenExpirationTimeInMinutes: 60
